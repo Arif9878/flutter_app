@@ -3,12 +3,12 @@ import 'package:flutter_app/widgets/Header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class InfoScreen extends StatefulWidget {
+class NewsScreen extends StatefulWidget {
   @override
   _InfoScreenState createState() => _InfoScreenState();
 }
 
-class _InfoScreenState extends State<InfoScreen> {
+class _InfoScreenState extends State<NewsScreen> {
   final controller = ScrollController();
   double offset = 0;
 
