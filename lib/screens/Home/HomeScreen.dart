@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_app/utils/Constants.dart';
 import 'package:flutter_app/widgets/Header.dart';
 import 'package:flutter_app/widgets/Counter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_app/models/HomeModel.dart';
+import 'package:flutter_app/bloc/HomeBloc.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -35,6 +38,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    homeBloc.fetchCumulativeCase();
+    return StreamBuilder(
+        stream: homeBloc.cumulativeCase,
+        builder: (context, AsyncSnapshot<CumulativeCase> snapshot) {
+          if (snapshot.hasData) {
+            return _buildScreen(snapshot.data);
+          } else if (snapshot.hasError) {
+            return _buildFailure(snapshot.error.toString());
+          }
+          return Center(child: CircularProgressIndicator());
+        });
+  }
+
+  _buildScreen(CumulativeCase data) {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd MMM yyyy').format(now);
     return Scaffold(
       body: SingleChildScrollView(
         controller: controller,
@@ -100,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: kTitleTextstyle,
                             ),
                             TextSpan(
-                              text: "Newest update March 28",
+                              text: "Newest update $formattedDate",
                               style: TextStyle(
                                 color: kTextLightColor,
                               ),
@@ -137,17 +156,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <Widget>[
                         Counter(
                           color: kInfectedColor,
-                          number: 1046,
+                          number: data.jumlahKasus,
                           title: "Infected",
                         ),
                         Counter(
                           color: kDeathColor,
-                          number: 87,
+                          number: data.meninggal,
                           title: "Deaths",
                         ),
                         Counter(
                           color: kRecovercolor,
-                          number: 46,
+                          number: data.sembuh,
                           title: "Recovered",
                         ),
                       ],
@@ -198,6 +217,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  _buildFailure(error) {
+    return Container(child: Text(error));
   }
 }
 

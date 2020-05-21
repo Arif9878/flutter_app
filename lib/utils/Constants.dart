@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+const apiMathdro = 'https://indonesia-covid-19.mathdro.id/api/';
 // String
 const String appName = "Coba Aja";
 
